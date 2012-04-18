@@ -1,4 +1,4 @@
-package com.twitter.tokyo.kucho.kucho;
+package com.twitter.tokyo.kucho;
 
 import java.util.List;
 
@@ -15,12 +15,11 @@ import static junit.framework.Assert.assertNotNull;
  * @author Ken Kawamoto
  */
 public class SeatingListTest {
-  private SeatingList seatingList;
+  private static final String JSON_URL = "https://spreadsheets.google.com/feeds/cells/0ApJM4Av2i1wSdDlWNjM0YWlJdUI4SktZdUtFOFZscnc/od6/public/basic?alt=json";
   private final String userName = "kentaro";
 
   @Before
   public void setUp() {
-    seatingList = new SeatingList();
   }
 
   @Test
@@ -33,18 +32,18 @@ public class SeatingListTest {
 
   @Test
   public void testGetVentilationModule() throws Exception {
+    SeatingList seatingList = new SeatingList(JSON_URL);
+
     List<VentilationModule> modules = seatingList.getVentilationModules(userName);
     assertNotNull(modules);
     assertEquals(2, modules.size());
     VentilationModule vm0 = modules.get(0);
     assertNotNull(vm0);
-    assertEquals("E-13", vm0.getName());
+    assertEquals("VAVE-13", vm0.getName());
 
     VentilationModule vm1 = modules.get(1);
     assertNotNull(vm1);
-    assertEquals("E-14", vm1.getName());
+    assertEquals("VAVE-14", vm1.getName());
   }
-
-
 
 }
