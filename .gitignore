@@ -1,8 +1,9 @@
+config.yml
 kucho-daemon/src/main/resources/twitter4j.properties 
 .DS_Store
 .idea/
-SeatingList/target/*
+seating-list/target/*
+kucho-daemon/target/*
 *.iml
 *.ipr
 *.iws
-kucho-daemon/target/*

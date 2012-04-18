@@ -16,13 +16,9 @@
 package com.twitter.tokyo.kucho.daemon;
 
 import com.twitter.tokyo.kucho.SeatingList;
-import com.twitter.tokyo.kucho.VentilationModule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DaemonListenerTest {
     @Test
@@ -72,14 +68,11 @@ public class DaemonListenerTest {
     }
 
 
-    SeatingList mySeatingList = new SeatingList() {
-        public List<VentilationModule> getVentilationModules(String userName) {
-            List<VentilationModule> modules = new ArrayList<VentilationModule>();
-            if ("yusukey".equals(userName)) {
-                modules.add(new VentilationModule("E81"));
-                modules.add(new VentilationModule("E82"));
-            }
-            return modules;
-        }
-    };
+    SeatingList mySeatingList = new SeatingListStub();
+
+    @Test
+    public void callCooler() {
+        System.out.println(DaemonStatusListener.class.getResourceAsStream("/atsui.jpg"));
+    }
+
 }

@@ -20,6 +20,8 @@ import com.twitter.tokyo.kucho.VentilationModule;
 import twitter4j.*;
 import twitter4j.internal.logging.Logger;
 
+import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 /*package*/ final class DaemonStatusListener extends StatusAdapter implements Constants {
@@ -37,17 +39,28 @@ import java.util.List;
     public void onStatus(Status status) {
         String screenName = status.getUser().getScreenName();
         String message = null;
+        InputStream profileImageResource = null;
         String[] modules = getModules(screenName);
         if (status.getText().contains(HOT)) {
-            ehills.cooler(modules);
-            message = "@" + screenName + " 涼しくしたよ！";
+            if (ehills.cooler(modules)) {
+                message = "@" + screenName + " 涼しくしたよ！";
+                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/atsui.jpg");
+            } else {
+                message = "@" + screenName + " もう無理！";
+            }
         } else if (status.getText().contains(COLD)) {
-            ehills.warmer(modules);
-            message = "@" + screenName + " 暖かくしたよ！";
+            if (ehills.warmer(modules)) {
+                message = "@" + screenName + " 暖かくしたよ！";
+                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/samui.jpg");
+            } else {
+                message = "@" + screenName + " もう無理！";
+            }
+
         }
         if (message != null) {
             try {
-                TwitterFactory.getSingleton().updateStatus(message);
+//                TwitterFactory.getSingleton().updateProfileImage(profileImageResource);
+                TwitterFactory.getSingleton().updateStatus(message + " " + new Date().toString());
             } catch (TwitterException e) {
                 logger.error("failed to update status", e);
             }
