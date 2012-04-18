@@ -4,11 +4,6 @@ require 'yaml'
 require 'mechanize'
 
 # todo
-# remove duplicate
-# private
-# @url
-# intention revealing
-# dev_ids
 # rename file
 # script
 class AirRemote
