@@ -65,7 +65,7 @@ private
       last_page = confirm_form.submit(temp_button)
 
       last_form = last_page.form_with(:name => 'Form1')
-      STDERR.puts "success"
+
       # Go!
       # last_form.submit(last_form.button_with(:name => 'btnAdjust'))
       return true
