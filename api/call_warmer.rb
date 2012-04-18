@@ -18,4 +18,4 @@ require 'api/air_remote'
 
 config = YAML.load_file("#{Dir::pwd}/config.yml")
 remote = AirRemote.new(config["url"])
-puts remote.warmer!(ARGV) ? "ok" : "ng"
+puts remote.warmer!(ARGV) ? "ok" : "ng: #{remote.last_error}"
