@@ -49,12 +49,9 @@ def change_tempr(conditioners, tempr)
 end
 
 #change_tempr([], 3)
-def current_value()
+def current_value(dev_id)
   config = YAML.load_file("#{Dir::pwd}/config.yml")
-  dev_id = 'tcboxABU017EP015'
   agent = Mechanize.new
-
-  target = 'tcboxVAV017EI001'
 
   agent.get(config["url"]) do |page|
 
@@ -83,6 +80,4 @@ def current_value()
   end
 end
 
-
-
-current_value
+current_value('tcboxABU017EP015')
