@@ -45,7 +45,7 @@ class AirRemote
         @last_error = "too warm!"
         return false
       end
-      return set_temperature!([warmest[:dev_id]], warmest[:temperature] + 1)
+      return set_temperature!([coolest[:dev_id]], coolest[:temperature] + 1)
     rescue => exc
       @last_error = exc.to_s
       return false
