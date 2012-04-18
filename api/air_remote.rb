@@ -24,8 +24,9 @@ class AirRemote
 private
   def fetch_temperatures(names)
     dev_ids = names.map {|name| name2dev_id(name) }
-    return dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+    return dev_ids.map{|dev_id| sleep 1; { :dev_id => dev_id, :temperature => temperature(dev_id) }}
   end
+
   def set_temperature!(dev_ids, value)
     if (value.class != Fixnum ||
         value > 5 ||
@@ -61,7 +62,6 @@ private
   end
 
   def temperature(dev_id)
-    sleep 1
     # Select air conditioner
     form = login.form_with(:name => 'Form1')
     form.checkbox_with(:name => dev_id).check
