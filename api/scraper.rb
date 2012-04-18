@@ -16,43 +16,31 @@ class AirRemote
     @url = url
   end
 
-  def change_tempr(conditioners, tempr)
+  def set_temperature(conditioners, tempr)
     begin
       agent = Mechanize.new
 
       target = 'tcboxVAV017EI001'
 
-      agent.get(config["url"]) do |page|
+      # Select air conditioners
+      form = login.form_with(:name => 'Form1')
+      pp form
+      target_checkbox = form.checkbox_with(:name => target)
+      pp target_checkbox.check
 
-        # Top menu
-        menu_form = page.form_with(:name => 'Form1')
-        pp menu_form
+      # Submit then the air conditioners are shown
+      kiki_button = form.button_with(:name => 'btnEquipment')
+      pp kiki_button
+      reloaded_page = form.submit(kiki_button)
+      confirm_form = reloaded_page.form_with(:name => 'Form1')
 
-        # Click the enter button
-        temperature_button = menu_form.button_with(:name => 'btnMainMenu1')
-        kucho_page = menu_form.submit(temperature_button)
-
-        # Select air conditioners
-        form = kucho_page.form_with(:name => 'Form1')
-        pp form
-        target_checkbox = form.checkbox_with(:name => target)
-        pp target_checkbox.check
-
-        # Submit then the air conditioners are shown
-        kiki_button = form.button_with(:name => 'btnEquipment')
-        pp kiki_button
-        reloaded_page = form.submit(kiki_button)
-        confirm_form = reloaded_page.form_with(:name => 'Form1')
-
-        hoge.hige
-        # Select temperature
-        temp_button =  confirm_form.button_with(:name => 'btnTemperatureSetValueButtons2')
-        last_page = confirm_form.submit(temp_button)
-        pp last_page
-        last_form = last_page.form_with(:name => 'Form1')
-        # Go!
-        #  pp last_form.submit(last_form.button_with(:name => 'btnAdjust'))
-      end
+      # Select temperature
+      temp_button =  confirm_form.button_with(:name => 'btnTemperatureSetValueButtons2')
+      last_page = confirm_form.submit(temp_button)
+      pp last_page
+      last_form = last_page.form_with(:name => 'Form1')
+      # Go!
+      #  pp last_form.submit(last_form.button_with(:name => 'btnAdjust'))
 
     rescue => exc
       STDERR.puts "API internal error: #{exc.to_s}"
@@ -71,7 +59,7 @@ class AirRemote
     page = form.submit(button)
     return page.search('#tblTemperatureList tr:nth-child(1) td:nth-child(4)').text.to_i
   end
-
+private
   def login
     agent = Mechanize.new
     agent.get(@url) do |page|
@@ -87,4 +75,5 @@ end
 
 config = YAML.load_file("#{Dir::pwd}/config.yml")
 remote = AirRemote.new(config["url"])
-pp remote.temperature('tcboxABU017EP015')
+#pp remote.temperature('tcboxABU017EP015')
+pp remote.set_temperature([], 3)
