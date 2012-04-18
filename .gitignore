@@ -1,4 +1,8 @@
-SeatingList/.idea
+kucho-daemon/src/main/resources/twitter4j.properties 
+.DS_Store
+.idea/
+SeatingList/target/*
 *.iml
 *.ipr
 *.iws
+kucho-daemon/target/*

@@ -5,6 +5,9 @@ package com.twitter.tokyo.kucho;
  */
 public class VentilationModule {
   private String name;
+  public VentilationModule(String name){
+    this.name = name;
+  }
   public String getName() {
     return name;
   }
