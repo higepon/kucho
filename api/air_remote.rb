@@ -8,22 +8,24 @@ class AirRemote
   end
 
   def cooler!(names)
-    dev_ids = names.map {|name| name2dev_id(name) }
-    ts = dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+    ts = fetch_temperatures(names)
     warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
     return false if (warmest[:temperature] == 1) 
     return set_temperature!([warmest[:dev_id]], warmest[:temperature] - 1)
   end
 
   def warmer!(names)
-    dev_ids = names.map {|name| name2dev_id(name) }
-    ts = dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+    ts = fetch_temperatures(names)
     coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
     return false if (coolest[:temperature] == 5) 
     return set_temperature!([warmest[:dev_id]], warmest[:temperature] + 1)
   end
 
 private
+  def fetch_temperatures(names)
+    dev_ids = names.map {|name| name2dev_id(name) }
+    return dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+  end
   def set_temperature!(dev_ids, value)
     if (value.class != Fixnum ||
         value > 5 ||
