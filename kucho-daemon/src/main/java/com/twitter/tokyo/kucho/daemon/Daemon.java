@@ -26,10 +26,19 @@ public final class Daemon implements Constants {
 
     public static void main(String[] args) {
         TwitterStream stream = TwitterStreamFactory.getSingleton();
-        stream.addListener(new DaemonStatusListener(EHillsImpl.getInstance(), new SeatingList()));
+//        SeatingList seatingList = new SeatingListStub();
+        SeatingList seatingList = new SeatingList(args[0]);
+        stream.addListener(new DaemonStatusListener(EHillsImpl.getInstance(), seatingList));
         FilterQuery query = new FilterQuery().track(new String[]{HOT, COLD});
         logger.info("Starting.");
         stream.filter(query);
         logger.info("Started.");
+        while (true) {
+            try {
+                Thread.sleep(1000000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
     }
 }
