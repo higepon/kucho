@@ -7,14 +7,16 @@ class AirRemote
     @url = url
   end
 
-  def cooler!(dev_ids)
+  def cooler!(names)
+    dev_ids = names.map {|name| name2dev_id(name) }
     ts = dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
     warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
     return false if (warmest[:temperature] == 1) 
     return set_temperature!([warmest[:dev_id]], warmest[:temperature] - 1)
   end
 
-  def warmer!(dev_ids)
+  def warmer!(names)
+    dev_ids = names.map {|name| name2dev_id(name) }
     ts = dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
     coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
     return false if (coolest[:temperature] == 5) 
@@ -30,7 +32,6 @@ private
     end
 
     begin
-
       # Select air conditioners
       form = login.form_with(:name => 'Form1')
       dev_ids.each {|dev_id|
@@ -47,9 +48,9 @@ private
       last_page = confirm_form.submit(temp_button)
 
       last_form = last_page.form_with(:name => 'Form1')
-      pp "success"
+      STDERR.puts "success"
       # Go!
-      #  pp last_form.submit(last_form.button_with(:name => 'btnAdjust'))
+      # last_form.submit(last_form.button_with(:name => 'btnAdjust'))
       return true
     rescue => exc
       STDERR.puts "internal error: #{exc.to_s}"
@@ -79,4 +80,9 @@ private
       return form.submit(button)
     end
   end
+
+  def name2dev_id(name)
+    return "tcbox#{name[0..2]}0#{name[3..5]}I0#{name[7..8]}"
+  end
+
 end
