@@ -72,11 +72,7 @@ private
     # Select air conditioners
     form = login.form_with(:name => 'Form1')
     dev_ids.each {|dev_id|
-      begin
-        form.checkbox_with(:name => dev_id).check
-      rescue
-        raise "unknown air conditioner #{dev_id}"
-      end
+      form.checkbox_with(:name => dev_id).check
     }
 
     # Submit then the air conditioners are shown
@@ -98,7 +94,11 @@ private
   def temperature(dev_id)
     # Select air conditioner
     form = login.form_with(:name => 'Form1')
-    form.checkbox_with(:name => dev_id).check
+    begin
+      form.checkbox_with(:name => dev_id).check
+    rescue => exc
+      raise "unknown air conditioner #{dev_id} #{exc.to_s}"
+    end
 
     # Submit then the air conditioner is shown
     button = form.button_with(:name => 'btnEquipment')
