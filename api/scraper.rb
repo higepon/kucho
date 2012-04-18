@@ -16,17 +16,14 @@ class AirRemote
     @url = url
   end
 
-  def set_temperature(conditioners, tempr)
+  def set_temperature(dev_ids, tempr)
     begin
-      agent = Mechanize.new
-
-      target = 'tcboxVAV017EI001'
 
       # Select air conditioners
       form = login.form_with(:name => 'Form1')
-      pp form
-      target_checkbox = form.checkbox_with(:name => target)
-      pp target_checkbox.check
+      dev_ids.each {|dev_id|
+        form.checkbox_with(:name => dev_id).check
+      }
 
       # Submit then the air conditioners are shown
       kiki_button = form.button_with(:name => 'btnEquipment')
@@ -76,4 +73,4 @@ end
 config = YAML.load_file("#{Dir::pwd}/config.yml")
 remote = AirRemote.new(config["url"])
 #pp remote.temperature('tcboxABU017EP015')
-pp remote.set_temperature([], 3)
+pp remote.set_temperature(['tcboxVAV017EI001'], 3)
