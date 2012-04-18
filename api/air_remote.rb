@@ -26,7 +26,10 @@ class AirRemote
     begin
       ts = fetch_temperatures(names)
       warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
-      return false if (warmest[:temperature] == 1) 
+      if (warmest[:temperature] == 1)
+        @last_error = "too cool!"
+        return false
+      end
       return set_temperature!([warmest[:dev_id]], warmest[:temperature] - 1)
     rescue => exc
       @last_error = exc.to_s
@@ -38,7 +41,10 @@ class AirRemote
     begin
       ts = fetch_temperatures(names)
       coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
-      return false if (coolest[:temperature] == 5) 
+      if (coolest[:temperature] == 5) 
+        @last_error = "too warm!"
+        return false
+      end
       return set_temperature!([warmest[:dev_id]], warmest[:temperature] + 1)
     rescue => exc
       @last_error = exc.to_s
