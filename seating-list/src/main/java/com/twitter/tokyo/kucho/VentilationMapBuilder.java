@@ -23,13 +23,14 @@ import java.util.StringTokenizer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VentilationMapBuilder {
-  private static final Logger logger = Logger.getLogger(VentilationMapBuilder.class.getName());
+  private static final Logger logger = LoggerFactory.getLogger(VentilationMapBuilder.class);
 
   private final String json;
   VentilationMapBuilder(String json) {
