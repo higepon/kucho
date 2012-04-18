@@ -31,15 +31,29 @@ public class EHillsImpl implements EHills {
     }
 
     public boolean warmer(String[] areas) {
+        return callHigepon("../api/call_warmer.rb", areas);
+    }
+
+    public boolean cooler(String[] areas) {
+        return callHigepon("../api/call_cooler.rb", areas);
+    }
+
+    private boolean callHigepon(String command, String[] areas) {
         try {
-            ProcessBuilder pb = new ProcessBuilder("myCommand", join(areas," ")).redirectErrorStream(true);
+            ProcessBuilder pb = new ProcessBuilder("ruby", command, join(areas, " "));
+            pb.redirectErrorStream(true);
             Process p = pb.start();
             p.waitFor();
             InputStream is = p.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
-            String result = br.readLine();
+            StringBuilder result = new StringBuilder();
+            String line;
+            while(null != (line = br.readLine())){
+                result.append(line);
+            }
             p.waitFor();
+            logger.info("response from the API:" + result);
             return "ok".equals(result);
         } catch (IOException e) {
             logger.error("failed:", e);
@@ -50,17 +64,13 @@ public class EHillsImpl implements EHills {
         }
     }
 
-    public boolean cooler(String[] areas) {
-        return true;
-    }
-
-    private static String join(String[] strs, String separator){
+    private static String join(String[] strs, String separator) {
         StringBuilder joined = new StringBuilder();
         boolean first = true;
-        for(String str : strs){
-            if(first){
+        for (String str : strs) {
+            if (first) {
                 first = false;
-            }else{
+            } else {
                 joined.append(separator);
             }
             joined.append(str);
