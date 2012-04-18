@@ -16,7 +16,21 @@ class AirRemote
     @url = url
   end
 
-  def set_temperature(dev_ids, value)
+  def cooler!(dev_ids)
+    ts dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+    warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
+    return false if (warmest[:temperature] == 1) 
+    return nset_temperature!([warmest[:dev_id]], warmest[:temperature] - 1)
+  end
+
+  def warmer!(dev_ids)
+    ts dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+    coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
+    return false if (coolest[:temperature] == 5) 
+    return set_temperature!([warmest[:dev_id]], warmest[:temperature] + 1)
+  end
+
+  def set_temperature!(dev_ids, value)
     if (value.class != Fixnum ||
         value > 5 ||
         value < 0) 
@@ -41,6 +55,7 @@ class AirRemote
       last_page = confirm_form.submit(temp_button)
 
       last_form = last_page.form_with(:name => 'Form1')
+      pp "success"
       # Go!
       #  pp last_form.submit(last_form.button_with(:name => 'btnAdjust'))
       return true
@@ -51,7 +66,7 @@ class AirRemote
   end
 
   def temperature(dev_id)
-
+    sleep 1
     # Select air conditioner
     form = login.form_with(:name => 'Form1')
     form.checkbox_with(:name => dev_id).check
@@ -77,5 +92,4 @@ end
 
 config = YAML.load_file("#{Dir::pwd}/config.yml")
 remote = AirRemote.new(config["url"])
-#pp remote.temperature('tcboxABU017EP015')
-pp remote.set_temperature(['tcboxVAV017EI001'], 3)
+pp remote.cooler!(['tcboxVAV017EI001', 'tcboxVAV017EI002'])
