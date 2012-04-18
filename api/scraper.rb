@@ -27,7 +27,6 @@ class AirRemote
 
       # Submit then the air conditioners are shown
       kiki_button = form.button_with(:name => 'btnEquipment')
-      pp kiki_button
       reloaded_page = form.submit(kiki_button)
       confirm_form = reloaded_page.form_with(:name => 'Form1')
 
