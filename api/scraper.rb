@@ -16,7 +16,13 @@ class AirRemote
     @url = url
   end
 
-  def set_temperature(dev_ids, tempr)
+  def set_temperature(dev_ids, value)
+    if (value.class != Fixnum ||
+        value > 5 ||
+        value < 0) 
+      raise "temperature should be 1, 2, 3, 4 or 5"
+    end
+
     begin
 
       # Select air conditioners
@@ -31,15 +37,15 @@ class AirRemote
       confirm_form = reloaded_page.form_with(:name => 'Form1')
 
       # Select temperature
-      temp_button =  confirm_form.button_with(:name => 'btnTemperatureSetValueButtons2')
+      temp_button =  confirm_form.button_with(:name => "btnTemperatureSetValueButtons#{value - 1}")
       last_page = confirm_form.submit(temp_button)
-      pp last_page
+
       last_form = last_page.form_with(:name => 'Form1')
       # Go!
       #  pp last_form.submit(last_form.button_with(:name => 'btnAdjust'))
-
+      return true
     rescue => exc
-      STDERR.puts "API internal error: #{exc.to_s}"
+      STDERR.puts "internal error: #{exc.to_s}"
       return false
     end
   end
@@ -55,10 +61,10 @@ class AirRemote
     page = form.submit(button)
     return page.search('#tblTemperatureList tr:nth-child(1) td:nth-child(4)').text.to_i
   end
+
 private
   def login
-    agent = Mechanize.new
-    agent.get(@url) do |page|
+    Mechanize.new.get(@url) do |page|
       # Top menu
       form = page.form_with(:name => 'Form1')
 
