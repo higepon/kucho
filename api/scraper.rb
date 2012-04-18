@@ -1,7 +1,10 @@
 require 'rubygems'
-require 'mechanize'
+require 'pp'
 require 'yaml'
+require 'mechanize'
 
 config = YAML.load_file("#{Dir::pwd}/config.yml")
-p config["url"]
+agent = Mechanize.new
+page = agent.get(config["url"])
+pp page
 
