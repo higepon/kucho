@@ -1,4 +1,7 @@
+.DS_Store
+.idea/
+SeatingList/target/*
 *.iml
 *.ipr
 *.iws
-daemon/target/*
+kucho-daemon/target/*
