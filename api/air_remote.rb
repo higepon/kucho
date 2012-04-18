@@ -1,30 +1,27 @@
 require 'rubygems'
 require 'pp'
-require 'yaml'
 require 'mechanize'
 
-# todo
-# rename file
-# script
 class AirRemote
   def initialize(url)
     @url = url
   end
 
   def cooler!(dev_ids)
-    ts dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+    ts = dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
     warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
     return false if (warmest[:temperature] == 1) 
-    return nset_temperature!([warmest[:dev_id]], warmest[:temperature] - 1)
+    return set_temperature!([warmest[:dev_id]], warmest[:temperature] - 1)
   end
 
   def warmer!(dev_ids)
-    ts dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
+    ts = dev_ids.map{|dev_id| { :dev_id => dev_id, :temperature => temperature(dev_id) }}
     coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
     return false if (coolest[:temperature] == 5) 
     return set_temperature!([warmest[:dev_id]], warmest[:temperature] + 1)
   end
 
+private
   def set_temperature!(dev_ids, value)
     if (value.class != Fixnum ||
         value > 5 ||
@@ -72,7 +69,6 @@ class AirRemote
     return page.search('#tblTemperatureList tr:nth-child(1) td:nth-child(4)').text.to_i
   end
 
-private
   def login
     Mechanize.new.get(@url) do |page|
       # Top menu
@@ -84,7 +80,3 @@ private
     end
   end
 end
-
-config = YAML.load_file("#{Dir::pwd}/config.yml")
-remote = AirRemote.new(config["url"])
-pp remote.cooler!(['tcboxVAV017EI001', 'tcboxVAV017EI002'])
