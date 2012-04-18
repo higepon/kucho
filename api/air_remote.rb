@@ -72,7 +72,11 @@ private
     # Select air conditioners
     form = login.form_with(:name => 'Form1')
     dev_ids.each {|dev_id|
-      form.checkbox_with(:name => dev_id).check
+      begin
+        form.checkbox_with(:name => dev_id).check
+      rescue
+        raise "unknown air conditioner #{dev_id}"
+      end
     }
 
     # Submit then the air conditioners are shown
