@@ -10,4 +10,4 @@ config = YAML.load_file("#{Dir::pwd}/config.yml")
 dev_ids = ARGV.map {|arg| name2dev_id(arg) }
 
 remote = AirRemote.new(config["url"])
-remote.cooler!(dev_ids)
+puts remote.cooler!(dev_ids) ? "ok" : "ng"
