@@ -19,6 +19,11 @@ public class Message {
             "じゃあお昼寝行ってくるぴよ",
             "ばいばいさようならー",
             "Dooo youuur bestttt!!!",
+            "そろそろかえりたいピヨ",
+            "これからデートぴよ",
+            "ぴよ。ぴよ。ぴよ。",
+            "空調の操作もけっこー難しいんだよ。",
+            "今週末はまだフリーぴよ。誰か誘って〜〜",
     };
 
     public static String getMessage() {
