@@ -37,31 +37,27 @@ import java.util.List;
     public void onStatus(Status status) {
         String screenName = status.getUser().getScreenName();
         String message = null;
-//        InputStream profileImageResource = null;
-        String profileImageResource = null;
+        InputStream profileImageResource = null;
         String[] modules = getModules(screenName);
         if (status.getText().contains(HOT)) {
             if (ehills.cooler(modules)) {
                 message = "@" + screenName + " 涼しくしたよ！ "+Message.getMessage();
-//                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/atsui.jpg");
-                profileImageResource = "src/main/resources/atsui.jpg";
+                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/atsui.jpg");
             } else {
-                message = "@" + screenName + " もう無理！";
+                message = "@" + screenName + " もう十分涼しいはずなんだけど・・";
             }
         } else if (status.getText().contains(COLD)) {
             if (ehills.warmer(modules)) {
                 message = "@" + screenName + " 暖かくしたよ！ "+Message.getMessage();
-//                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/samui.jpg");
-                profileImageResource = "src/main/resources/samui.jpg";
+                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/samui.jpg");
             } else {
-                message = "@" + screenName + " もう無理！";
+                message = "@" + screenName + " もう十分あたたかいはずなんだけど・・";
             }
 
         }
         if (message != null) {
             try {
-//                TwitterFactory.getSingleton().updateProfileImage(new File(profileImageResource));
-                TwitterFactory.getSingleton().updateStatus(message + " " + new Date().toString());
+                TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message + " " + new Date().toString()).media("image",profileImageResource));
             } catch (TwitterException e) {
                 logger.error("failed to update status", e);
             }

@@ -52,7 +52,6 @@ public class EHillsImpl implements EHills {
             while (null != (line = br.readLine())) {
                 result.append(line);
             }
-            p.waitFor();
             logger.info("response from the API:" + result);
             return "ok".equals(result.toString().trim());
         } catch (IOException e) {

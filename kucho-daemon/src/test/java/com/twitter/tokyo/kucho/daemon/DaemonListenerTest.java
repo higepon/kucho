@@ -17,6 +17,12 @@ package com.twitter.tokyo.kucho.daemon;
 
 import com.twitter.tokyo.kucho.SeatingList;
 import org.junit.Test;
+import twitter4j.StatusUpdate;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -71,8 +77,8 @@ public class DaemonListenerTest {
     SeatingList mySeatingList = new SeatingListStub();
 
     @Test
-    public void callCooler() {
-        System.out.println(DaemonStatusListener.class.getResourceAsStream("/atsui.jpg"));
+    public void callCooler() throws TwitterException{
+        TwitterFactory.getSingleton().updateStatus(new StatusUpdate(new Date().toString()).media("image",DaemonStatusListener.class.getResourceAsStream("/atsui.jpg")));
     }
 
 }

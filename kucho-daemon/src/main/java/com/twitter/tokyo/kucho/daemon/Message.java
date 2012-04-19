@@ -1,14 +1,5 @@
 package com.twitter.tokyo.kucho.daemon;
 
-import java.util.Random;
-
-/**
- * Created with IntelliJ IDEA.
- * User: yusuke
- * Date: 4/18/12
- * Time: 6:02 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Message {
     static String[] messages = {
             "がんばってピ",
