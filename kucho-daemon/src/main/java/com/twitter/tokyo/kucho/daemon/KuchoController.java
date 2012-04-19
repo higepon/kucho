@@ -19,7 +19,6 @@ import com.twitter.tokyo.kucho.SeatingList;
 import twitter4j.*;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 /*package*/ final class KuchoController extends StatusAdapter implements Constants {
@@ -54,7 +53,7 @@ import java.util.List;
         }
 
         int degree = 2;
-        if (text.matches(".*(なまら|のれそれ|こじゃんと|岐阜|max|マックス|テラ|めっさ|バリ|ばり|どえりゃぁ|まじ|ﾏｼﾞ|マジ" +
+        if (text.matches(".*(たんげ|なんぼ|なまら|のれそれ|こじゃんと|岐阜|max|マックス|テラ|めっさ|バリ|ばり|どえりゃぁ|まじ|ﾏｼﾞ|マジ" +
                 "|ごっつ|チョー|でら|超|めちゃ|とても|とっても|すごく|すんごい|めっちゃ|えらい|えれー|すげー" +
                 "|too|very|extremely|intensively).*")) {
             degree = 4;
@@ -67,7 +66,6 @@ import java.util.List;
         }
 
         String message = null;
-//        InputStream profileImageResource = null;
         String imagePath = null;
         if (degree < 0) {
             if (ehills.adjust(degree, modules)) {
@@ -85,7 +83,6 @@ import java.util.List;
                 message = "@" + screenName + " もう十分あたたかいはずなんだけど・・";
                 imagePath = "/kucho.jpg";
             }
-
         }
         System.out.println("messaage:" + message + " " + imagePath);
         try {
@@ -97,11 +94,9 @@ import java.util.List;
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
                     TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message).media(imageFile));
-
                 } else {
-                    TwitterFactory.getSingleton().updateStatus(message + " " + new Date().toString());
+                    TwitterFactory.getSingleton().updateStatus(message);
                 }
-
             }
         } catch (TwitterException e) {
             logger.error("failed to update status", e);
