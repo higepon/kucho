@@ -19,6 +19,6 @@ public class Message {
     };
 
     public static String getMessage() {
-        return messages[(int) System.currentTimeMillis() % messages.length];
+        return messages[(int) (System.currentTimeMillis() % messages.length)];
     }
 }

@@ -16,7 +16,6 @@
 package com.twitter.tokyo.kucho.daemon;
 
 import com.twitter.tokyo.kucho.SeatingList;
-import com.twitter.tokyo.kucho.VentilationModule;
 import twitter4j.*;
 
 import java.io.File;
@@ -70,12 +69,8 @@ import java.util.List;
     }
 
     private String[] getModules(String screenName) {
-        List<VentilationModule> ventilationModules = seatingList.getVentilationModules(screenName);
-        String[] modules = new String[ventilationModules.size()];
-        for(int i=0;i<ventilationModules.size();i++){
-            modules[i]= ventilationModules.get(i).getName();
-        }
-        return modules;
+        List<String> ventilationModules = seatingList.getVentilationModules(screenName);
+        return ventilationModules.toArray(new String[0]);
     }
 
     @Override

@@ -21,7 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.twitter.tokyo.kucho.SeatingList;
-import com.twitter.tokyo.kucho.VentilationModule;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
@@ -35,27 +34,14 @@ public class SeatingListTest {
   }
 
   @Test
-  public void testMain() {
-    String[] args = {
-        "kentaro"
-    };
-    SeatingList.main(args);
-  }
-
-  @Test
   public void testGetVentilationModule() throws Exception {
     SeatingList seatingList = new SeatingList(JSON_URL);
 
-    List<VentilationModule> modules = seatingList.getVentilationModules(userName);
+    List<String> modules = seatingList.getVentilationModules(userName);
     assertNotNull(modules);
     assertEquals(2, modules.size());
-    VentilationModule vm0 = modules.get(0);
-    assertNotNull(vm0);
-    assertEquals("VAVE-13", vm0.getName());
-
-    VentilationModule vm1 = modules.get(1);
-    assertNotNull(vm1);
-    assertEquals("VAVE-14", vm1.getName());
+    assertEquals("VAV17E-13", modules.get(0));
+    assertEquals("VAV17E-14", modules.get(1));
   }
 
 }

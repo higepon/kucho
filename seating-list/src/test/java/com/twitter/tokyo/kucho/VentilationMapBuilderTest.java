@@ -29,18 +29,18 @@ public class VentilationMapBuilderTest {
   @Test
   public void testBuild() {
     VentilationMapBuilder builder = new VentilationMapBuilder(SAMPLE);
-    Map<String, List<VentilationModule>> map = builder.build();
+    Map<String, List<String>> map = builder.build();
     assertNotNull(map);
 
-    List<VentilationModule> vents0 = map.get("kentaro");
+    List<String> vents0 = map.get("kentaro");
     assertNotNull(vents0);
     assertEquals(2, vents0.size());
-    assertEquals("E-13", vents0.get(0).getName());
-    assertEquals("E-14", vents0.get(1).getName());
+    assertEquals("E-13", vents0.get(0));
+    assertEquals("E-14", vents0.get(1));
 
-    List<VentilationModule> vents1 = map.get("yusukey");
+    List<String> vents1 = map.get("yusukey");
     assertNotNull(vents1);
     assertEquals(1, vents1.size());
-    assertEquals("E-01", vents1.get(0).getName());
+    assertEquals("E-01", vents1.get(0));
   }
 }

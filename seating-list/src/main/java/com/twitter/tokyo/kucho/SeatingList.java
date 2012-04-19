@@ -35,7 +35,7 @@ public class SeatingList {
   private final String resourceUrl;
   private static final long UPDATE_INTERVAL_IN_MS = 5 * 60 * 1000;
 
-  private Map<String, List<VentilationModule>> ventMap;
+  private Map<String, List<String>> ventMap;
   private long lastUpdated = 0;
 
   // TODO: use Guice
@@ -77,15 +77,16 @@ public class SeatingList {
     }
   }
 
-  public List<VentilationModule> getVentilationModules(String userName) {
+  public List<String> getVentilationModules(String userName) {
     updateSeatingListIfNeeded();
 
-    List<VentilationModule> vents = ventMap.get(userName);
+    List<String> vents = ventMap.get(userName);
     if (vents == null) {
       logger.info("user \"" + userName + "\" not found. returning an empty list.");
       return ImmutableList.of();
     } else {
-      logger.info("user \"" + userName + "\" found. jjf kkyreturning an empty list.");
+      logger.info("user \"" + userName + "\" found. returning a list of "
+          + vents.size() + " ventilation modules");
       return vents;
     }
   }

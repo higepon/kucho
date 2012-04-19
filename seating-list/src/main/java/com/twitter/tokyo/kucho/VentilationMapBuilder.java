@@ -37,7 +37,7 @@ public class VentilationMapBuilder {
     this.json = json;
   }
 
-  Map<String, List<VentilationModule>> build() {
+  Map<String, List<String>> build() {
     Map<String, String> accountMap = new HashMap<String, String>();
     Map<String, String> ventMap = new HashMap<String, String>();
 
@@ -64,19 +64,19 @@ public class VentilationMapBuilder {
       return null;
     }
 
-    ImmutableMap.Builder<String, List<VentilationModule>> builder = ImmutableMap.builder();
+    ImmutableMap.Builder<String, List<String>> builder = ImmutableMap.builder();
 
     for (String recordId : accountMap.keySet()) {
       String account = accountMap.get(recordId);
       String ventIds = ventMap.get(recordId);
       if (ventIds == null || ventIds.length() == 0) {
-        builder.put(account, ImmutableList.<VentilationModule>of());
+        builder.put(account, ImmutableList.<String>of());
       } else {
         StringTokenizer st = new StringTokenizer(ventIds, ",");
 
-        ImmutableList.Builder<VentilationModule> listBuilder = ImmutableList.builder();
+        ImmutableList.Builder<String> listBuilder = ImmutableList.builder();
         while (st.hasMoreTokens()) {
-          listBuilder.add(new VentilationModule(st.nextToken().trim()));
+          listBuilder.add(st.nextToken().trim());
         }
 
         builder.put(account, listBuilder.build());
