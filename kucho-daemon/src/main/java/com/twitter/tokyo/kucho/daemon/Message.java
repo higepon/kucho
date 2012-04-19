@@ -18,6 +18,7 @@ public class Message {
             "また何かあったらいってぴよ",
             "じゃあお昼寝行ってくるぴよ",
             "ばいばいさようならー",
+            "Dooo youuur bestttt!!!",
     };
 
     public static String getMessage() {
