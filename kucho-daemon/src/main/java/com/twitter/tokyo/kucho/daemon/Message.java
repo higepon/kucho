@@ -1,5 +1,7 @@
 package com.twitter.tokyo.kucho.daemon;
 
+import java.util.Random;
+
 public class Message {
     static String[] messages = {
             "がんばってピ",
@@ -40,6 +42,6 @@ public class Message {
     };
 
     public static String getMessage() {
-        return messages[(int) (System.currentTimeMillis() % messages.length)];
+        return messages[new Random(System.currentTimeMillis()).nextInt(messages.length)];
     }
 }
