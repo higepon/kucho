@@ -26,10 +26,11 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SeatingList {
-  private static final Logger logger = Logger.getLogger(SeatingList.class.getName());
+  private static final Logger logger = LoggerFactory.getLogger(SeatingList.class);
 
   private final String resourceUrl;
   private static final long UPDATE_INTERVAL_IN_MS = 5 * 60 * 1000;
@@ -57,23 +58,20 @@ public class SeatingList {
     return getMethod.getResponseBodyAsString();
   }
 
-  private class JSONFormatException extends Exception {
-    JSONFormatException(String message) {
-      super(message);
-    }
-  }
-
   private void updateSeatingListIfNeeded() {
     if (ventMap != null &&
         lastUpdated + UPDATE_INTERVAL_IN_MS > new Date().getTime()) {
       return;
     }
 
+    logger.info("updating seat-ventilation mapping...");
     try {
       String json = loadJSON();
       VentilationMapBuilder builder = new VentilationMapBuilder(json);
       ventMap = builder.build();
       lastUpdated = new Date().getTime();
+
+      logger.info("updated seat-ventilation mapping");
     } catch (IOException e) {
       logger.error("Failed to fetch JSON string from " + resourceUrl, e);
     }
@@ -84,13 +82,12 @@ public class SeatingList {
 
     List<VentilationModule> vents = ventMap.get(userName);
     if (vents == null) {
+      logger.info("user \"" + userName + "\" not found. returning an empty list.");
       return ImmutableList.of();
     } else {
+      logger.info("user \"" + userName + "\" found. jjf kkyreturning an empty list.");
       return vents;
     }
-  }
-
-  public static void main(String[] args) {
   }
 
 }
