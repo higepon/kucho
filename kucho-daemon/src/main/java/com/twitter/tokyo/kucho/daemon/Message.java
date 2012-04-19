@@ -10,6 +10,7 @@ public class Message {
             "今日も仕事がんばるピヨ",
             "ほほほのほーい",
             "これで快適ピヨ",
+            "Dooo youuur bestttt!!!",
     };
 
     public static String getMessage() {
