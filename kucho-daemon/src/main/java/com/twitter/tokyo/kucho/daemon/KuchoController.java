@@ -54,7 +54,9 @@ import java.util.List;
         }
 
         int degree = 2;
-        if (text.matches(".*(でら|超|めちゃ|とても|とっても|すごく|すんごい|めっちゃ|えらい|too|very|extremely|intensively).*")) {
+        if (text.matches(".*(なまら|のれそれ|こじゃんと|岐阜|max|マックス|テラ|めっさ|バリ|ばり|どえりゃぁ|まじ|ﾏｼﾞ|マジ" +
+                "|ごっつ|チョー|でら|超|めちゃ|とても|とっても|すごく|すんごい|めっちゃ|えらい|えれー|すげー" +
+                "|too|very|extremely|intensively).*")) {
             degree = 4;
         }
         for (String hot : HOT) {
@@ -94,7 +96,7 @@ import java.util.List;
                 }
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
-                    TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message + " " + new Date().toString()).media(imageFile));
+                    TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message).media(imageFile));
 
                 } else {
                     TwitterFactory.getSingleton().updateStatus(message + " " + new Date().toString());
