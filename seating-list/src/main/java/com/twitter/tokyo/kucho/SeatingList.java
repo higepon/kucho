@@ -58,7 +58,7 @@ public class SeatingList {
     return getMethod.getResponseBodyAsString();
   }
 
-  private void updateSeatingListIfNeeded() {
+  private synchronized void updateSeatingListIfNeeded() {
     if (ventMap != null &&
         lastUpdated + UPDATE_INTERVAL_IN_MS > new Date().getTime()) {
       return;
@@ -91,4 +91,13 @@ public class SeatingList {
     }
   }
 
+  public List<String> getRooms() {
+    return ImmutableList.of("kiji", "yurikamome");
+  }
+
+  public List<String> getVentilationModulesIn(String roomName) {
+    updateSeatingListIfNeeded();
+
+    return ImmutableList.of("VAV17E-01", "VAV17E-02");
+  }
 }
