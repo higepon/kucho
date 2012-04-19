@@ -18,4 +18,10 @@ require 'api/air_remote'
 
 config = YAML.load_file("#{Dir::pwd}/config.yml")
 remote = AirRemote.new(config["url"])
-puts remote.cooler!(ARGV) ? "ok" : "ng: #{remote.last_error}"
+t = remote.cooler!(ARGV)
+if t
+  puts "ok"
+  t.join
+else
+  puts "ng: #{remote.last_error}"
+end

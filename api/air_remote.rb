@@ -87,10 +87,10 @@ private
     last_form = last_page.form_with(:name => 'Form1')
 
     # Go!
-    Thread.new do
+    t = Thread.new do
       last_form.submit(last_form.button_with(:name => 'btnAdjust'))
     end
-    return true
+    return t
   end
 
   def temperature(dev_id)
