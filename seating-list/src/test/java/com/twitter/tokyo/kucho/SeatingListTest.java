@@ -26,7 +26,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 public class SeatingListTest {
-  private static final String JSON_URL = "https://spreadsheets.google.com/feeds/cells/0ApJM4Av2i1wSdDlWNjM0YWlJdUI4SktZdUtFOFZscnc/od6/public/basic?alt=json";
   private final String userName = "kentaro";
 
   @Before
@@ -35,7 +34,7 @@ public class SeatingListTest {
 
   @Test
   public void testGetVentilationModule() throws Exception {
-    SeatingList seatingList = new SeatingList(JSON_URL);
+    SeatingList seatingList = new SeatingList();
 
     List<String> modules = seatingList.getVentilationModules(userName);
     assertNotNull(modules);
