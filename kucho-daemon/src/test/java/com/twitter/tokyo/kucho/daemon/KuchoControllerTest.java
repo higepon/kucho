@@ -34,24 +34,20 @@ public class KuchoControllerTest {
         listener.dryRun = true;
         assertEquals(3, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "#さむい"));
-        assertEquals(4, ehillsStub.level);
+        assertEquals(5, ehillsStub.level);
         assertModuleNames(ehillsStub, "VAV17E-13", "VAV17E-14");
         listener.onStatus(new StatusSkelton("yusukey", "#さむい"));
         assertEquals(5, ehillsStub.level);
-        listener.onStatus(new StatusSkelton("yusukey", "#さむい"));
-        assertEquals(5, ehillsStub.level);
-        listener.onStatus(new StatusSkelton("yusukey", "#あつい"));
-        assertEquals(4, ehillsStub.level);
-        listener.onStatus(new StatusSkelton("yusukey", "#あつい"));
-        assertEquals(3, ehillsStub.level);
-        listener.onStatus(new StatusSkelton("yusukey", "#あつい"));
-        assertEquals(2, ehillsStub.level);
-        listener.onStatus(new StatusSkelton("yusukey", "#あつい"));
+        listener.onStatus(new StatusSkelton("yusukey", "めちゃ #あつい"));
         assertEquals(1, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "#あつい"));
+        assertEquals(1, ehillsStub.level);
+        listener.onStatus(new StatusSkelton("yusukey", "very #cold"));
+        assertEquals(5, ehillsStub.level);
+        listener.onStatus(new StatusSkelton("yusukey", "extremely #hot"));
         assertEquals(1, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "kiji #さむい"));
-        assertEquals(2, ehillsStub.level);
+        assertEquals(3, ehillsStub.level);
         assertModuleNames(ehillsStub, "VAV17E-23", "VAV17E-24");
     }
 

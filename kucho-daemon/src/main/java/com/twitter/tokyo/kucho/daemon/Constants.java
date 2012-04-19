@@ -16,6 +16,6 @@
 package com.twitter.tokyo.kucho.daemon;
 
 interface Constants {
-    String HOT = "#あつい";
-    String COLD = "#さむい";
+    String[] HOT = {"#あつい", "#hot"};
+    String[] COLD = {"#さむい", "#cold"};
 }

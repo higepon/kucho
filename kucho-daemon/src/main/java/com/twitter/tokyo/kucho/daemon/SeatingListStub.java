@@ -14,8 +14,8 @@ class SeatingListStub extends SeatingList {
         modules.add("kiji");
         modules.add("きじ");
         return modules;
-
     }
+
     public List<String> getVentilationModulesIn(String roomName) {
         List<String> modules = new ArrayList<String>();
         if ("kiji".equals(roomName) || "きじ".equals(roomName)) {

@@ -27,7 +27,10 @@ public final class Daemon implements Constants {
         TwitterStream stream = TwitterStreamFactory.getSingleton();
         SeatingList seatingList = new SeatingList();
         stream.addListener(new KuchoController(EHillsImpl.getInstance(), seatingList));
-        FilterQuery query = new FilterQuery().track(new String[]{HOT, COLD});
+        String[] trackTags = new String[COLD.length + HOT.length];
+        System.arraycopy(COLD,0,trackTags,0,COLD.length);
+        System.arraycopy(HOT,0,trackTags,COLD.length,HOT.length);
+        FilterQuery query = new FilterQuery().track(trackTags);
         logger.info("Starting.");
         stream.filter(query);
         logger.info("Started.");

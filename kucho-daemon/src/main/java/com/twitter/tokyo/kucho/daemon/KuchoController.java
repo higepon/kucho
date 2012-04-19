@@ -37,33 +37,45 @@ import java.util.List;
     @Override
     public void onStatus(Status status) {
         String screenName = status.getUser().getScreenName();
-        String message = null;
-        InputStream profileImageResource = null;
-        List<String> modules = null;
-        String text = status.getText();
+        // lookup modules for the user's seat
+        List<String> modules = seatingList.getVentilationModules(status.getUser().getScreenName());
+        if (modules.size() == 0) {
+            // user is not in the list. do nothing
+            return;
+        }
 
+        String text = status.getText();
         // does the tweet contain room name?
-        for(String roomName : seatingList.getRooms()){
-            if(text.contains(roomName)){
+        for (String roomName : seatingList.getRooms()) {
+            if (text.contains(roomName)) {
                 modules = seatingList.getVentilationModulesIn(roomName);
                 break;
             }
         }
 
-        // lookup modules for the user's seat
-        if(modules == null){
-            modules = seatingList.getVentilationModules(status.getUser().getScreenName());
+        int degree = 2;
+        if (text.matches(".*(でら|超|めちゃ|とても|とっても|すごく|すんごい|めっちゃ|えらい|too|very|extremely|intensively).*")) {
+            degree = 4;
         }
-        if (status.getText().contains(HOT)) {
-            if (ehills.adjust(-1, modules)) {
+        for (String hot : HOT) {
+            if (text.contains(hot)) {
+                degree = degree * -1;
+                break;
+            }
+        }
+
+        String message = null;
+        InputStream profileImageResource = null;
+        if (degree < 0) {
+            if (ehills.adjust(degree, modules)) {
                 message = "@" + screenName + " 涼しくしたよ！ " + Message.getMessage();
                 profileImageResource = KuchoController.class.getResourceAsStream("/atsui.jpg");
             } else {
                 message = "@" + screenName + " もう十分涼しいはずなんだけど・・";
                 profileImageResource = KuchoController.class.getResourceAsStream("/kucho.jpg");
             }
-        } else if (status.getText().contains(COLD)) {
-            if (ehills.adjust(+1, modules)) {
+        } else {
+            if (ehills.adjust(degree, modules)) {
                 message = "@" + screenName + " 暖かくしたよ！ " + Message.getMessage();
                 profileImageResource = KuchoController.class.getResourceAsStream("/samui.jpg");
             } else {
@@ -73,7 +85,7 @@ import java.util.List;
 
         }
         if (message != null) {
-            System.out.println("messaage:"+message+" "+ profileImageResource);
+            System.out.println("messaage:" + message + " " + profileImageResource);
             try {
                 if (!dryRun) {
 //                TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message + " " + new Date().toString()).media("image",profileImageResource));
