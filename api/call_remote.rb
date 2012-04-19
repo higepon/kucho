@@ -20,6 +20,9 @@ config = YAML.load_file("#{Dir::pwd}/config.yml")
 remote = AirRemote.new(config["url"])
 
 delta = ARGV.shift.to_i
+
+puts "ARGV=#{ARGV}"
+
 warmer = delta > 0
 
 ts = remote.fetch_temperatures(ARGV)
