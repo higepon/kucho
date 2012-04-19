@@ -16,9 +16,12 @@
 package com.twitter.tokyo.kucho;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import com.google.common.collect.ImmutableList;
 
@@ -30,26 +33,41 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SeatingList {
-  private static final Logger logger = LoggerFactory.getLogger(SeatingList.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(SeatingList.class);
+  private static final String PROPERTIES_NAME = "SeatingList.properties";
 
-  private final String resourceUrl;
+  private final String peopleResourceUrl;
+  private final String roomsResourceUrl;
   private static final long UPDATE_INTERVAL_IN_MS = 5 * 60 * 1000;
 
-  private Map<String, List<String>> ventMap;
+  private Map<String, List<String>> peopleMap;
+  private Map<String, List<String>> roomsMap;
   private long lastUpdated = 0;
 
-  // TODO: use Guice
-  public SeatingList(String resourceUrl) {
-    this.resourceUrl = resourceUrl;
+  public SeatingList() {
+    InputStream is = this.getClass().getClassLoader().getResourceAsStream(PROPERTIES_NAME);
+    Properties props = new Properties();
+    try {
+      props.load(is);
+    } catch (IOException e) {
+      throw new RuntimeException("Properties file doesn't seem correct: " + PROPERTIES_NAME);
+    }
+    peopleResourceUrl = props.getProperty("peopleMap");
+    roomsResourceUrl = props.getProperty("roomsMap");
+
+    if (!isValidUrl(peopleResourceUrl) || !isValidUrl(roomsResourceUrl)) {
+      throw new UnsupportedOperationException("Unsupported protocol: "
+           + peopleResourceUrl + ", or " + roomsResourceUrl);
+    }
   }
 
-  String loadJSON() throws IOException {
-    if (!resourceUrl.startsWith("http://") && !resourceUrl.startsWith("https://")) {
-      throw new UnsupportedOperationException("Unsupported protocol: " + resourceUrl);
-    }
+  private boolean isValidUrl(String url) {
+    return url.startsWith("http://") || url.startsWith("https://");
+  }
 
+  String loadJSON(String url) throws IOException {
     HttpClient client = new HttpClient();
-    HttpMethod getMethod = new GetMethod(resourceUrl);
+    HttpMethod getMethod = new GetMethod(url);
     int statusCode = client.executeMethod(getMethod);
     if (statusCode != HttpStatus.SC_OK) {
       throw new IOException("Server returned " + statusCode);
@@ -59,45 +77,65 @@ public class SeatingList {
   }
 
   private synchronized void updateSeatingListIfNeeded() {
-    if (ventMap != null &&
+    if (roomsMap != null &&
         lastUpdated + UPDATE_INTERVAL_IN_MS > new Date().getTime()) {
       return;
     }
 
-    logger.info("updating seat-ventilation mapping...");
     try {
-      String json = loadJSON();
+      LOGGER.info("updating people mapping...");
+      String json = loadJSON(peopleResourceUrl);
       VentilationMapBuilder builder = new VentilationMapBuilder(json);
-      ventMap = builder.build();
-      lastUpdated = new Date().getTime();
+      peopleMap = builder.build();
 
-      logger.info("updated seat-ventilation mapping");
+      LOGGER.info("updated people mapping");
     } catch (IOException e) {
-      logger.error("Failed to fetch JSON string from " + resourceUrl, e);
+      LOGGER.error("Failed to fetch JSON string from " + peopleResourceUrl, e);
     }
+
+    try {
+      LOGGER.info("updating rooms mapping...");
+      String json = loadJSON(roomsResourceUrl);
+      VentilationMapBuilder builder = new VentilationMapBuilder(json);
+      roomsMap = builder.build();
+
+      LOGGER.info("updated rooms mapping");
+    } catch (IOException e) {
+      LOGGER.error("Failed to fetch JSON string from " + roomsResourceUrl, e);
+    }
+
+    lastUpdated = new Date().getTime();
   }
 
   public List<String> getVentilationModules(String userName) {
     updateSeatingListIfNeeded();
 
-    List<String> vents = ventMap.get(userName);
+    List<String> vents = peopleMap.get(userName);
     if (vents == null) {
-      logger.info("user \"" + userName + "\" not found. returning an empty list.");
+      LOGGER.info("user \"" + userName + "\" not found. returning an empty list.");
       return ImmutableList.of();
     } else {
-      logger.info("user \"" + userName + "\" found. returning a list of "
+      LOGGER.info("user \"" + userName + "\" found. returning a list of "
           + vents.size() + " ventilation modules");
       return vents;
     }
   }
 
   public List<String> getRooms() {
-    return ImmutableList.of("kiji", "yurikamome");
+    return ImmutableList.copyOf(roomsMap.keySet());
   }
 
   public List<String> getVentilationModulesIn(String roomName) {
     updateSeatingListIfNeeded();
 
-    return ImmutableList.of("VAV17E-01", "VAV17E-02");
+    List<String> vents = roomsMap.get(roomName);
+    if (vents == null) {
+      LOGGER.info("room \"" + roomName + "\" not found. returning an empty list.");
+      return ImmutableList.of();
+    } else {
+      LOGGER.info("room \"" + roomName + "\" found. returning a list of "
+          + vents.size() + " ventilation modules");
+      return vents;
+    }
   }
 }
