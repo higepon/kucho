@@ -35,7 +35,7 @@ public class EHillsImpl implements EHills {
 
     private boolean callHigepon(String command, int value, List<String> areas) {
         try {
-            logger.info(command +" " +join(areas, " "));
+            logger.info(command + " " + String.valueOf(value) + " " + join(areas, " "));
             ProcessBuilder pb = new ProcessBuilder("ruby", command,String.valueOf(value),  join(areas, " "));
             pb.redirectErrorStream(true);
             if (new File(".").getAbsolutePath().contains("kucho-daemon")) {
@@ -52,7 +52,7 @@ public class EHillsImpl implements EHills {
                 result.append(line);
             }
             logger.info("response from the API:" + result);
-            return "ok".equals(result.toString().trim());
+            return result.toString().contains("ok");
         } catch (IOException e) {
             logger.error("failed:", e);
             return false;

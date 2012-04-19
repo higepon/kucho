@@ -18,6 +18,7 @@ package com.twitter.tokyo.kucho.daemon;
 import com.twitter.tokyo.kucho.SeatingList;
 import twitter4j.*;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
@@ -65,35 +66,44 @@ import java.util.List;
         }
 
         String message = null;
-        InputStream profileImageResource = null;
+//        InputStream profileImageResource = null;
+        String imagePath = null;
         if (degree < 0) {
             if (ehills.adjust(degree, modules)) {
                 message = "@" + screenName + " 涼しくしたよ！ " + Message.getMessage();
-                profileImageResource = KuchoController.class.getResourceAsStream("/atsui.jpg");
+                imagePath = "/atsui.jpg";
             } else {
                 message = "@" + screenName + " もう十分涼しいはずなんだけど・・";
-                profileImageResource = KuchoController.class.getResourceAsStream("/kucho.jpg");
+                imagePath = "/kucho.jpg";
             }
         } else {
             if (ehills.adjust(degree, modules)) {
                 message = "@" + screenName + " 暖かくしたよ！ " + Message.getMessage();
-                profileImageResource = KuchoController.class.getResourceAsStream("/samui.jpg");
+                imagePath = "/samui.jpg";
             } else {
                 message = "@" + screenName + " もう十分あたたかいはずなんだけど・・";
-                profileImageResource = KuchoController.class.getResourceAsStream("/kucho.jpg");
+                imagePath = "/kucho.jpg";
             }
 
         }
-        if (message != null) {
-            System.out.println("messaage:" + message + " " + profileImageResource);
-            try {
-                if (!dryRun) {
-//                TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message + " " + new Date().toString()).media("image",profileImageResource));
+        System.out.println("messaage:" + message + " " + imagePath);
+        try {
+            if (!dryRun) {
+                imagePath = "src/main/resources" + imagePath;
+                if (!new File(".").getAbsolutePath().contains("kucho-daemon")) {
+                    imagePath = "kucho-daemon/" + imagePath;
+                }
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message + " " + new Date().toString()).media(imageFile));
+
+                } else {
                     TwitterFactory.getSingleton().updateStatus(message + " " + new Date().toString());
                 }
-            } catch (TwitterException e) {
-                logger.error("failed to update status", e);
+
             }
+        } catch (TwitterException e) {
+            logger.error("failed to update status", e);
         }
     }
 
