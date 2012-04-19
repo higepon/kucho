@@ -87,7 +87,9 @@ private
     last_form = last_page.form_with(:name => 'Form1')
 
     # Go!
-    last_form.submit(last_form.button_with(:name => 'btnAdjust'))
+    Thread.new do
+      last_form.submit(last_form.button_with(:name => 'btnAdjust'))
+    end
     return true
   end
 
