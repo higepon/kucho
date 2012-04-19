@@ -17,17 +17,25 @@ package com.twitter.tokyo.kucho.daemon;
 
 import com.twitter.tokyo.kucho.SeatingList;
 import org.junit.Test;
+import twitter4j.StatusUpdate;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class DaemonListenerTest {
+public class KuchoControllerTest {
     @Test
     public void testWarmer() {
         EHillsStub ehillsStub = new EHillsStub();
-        DaemonStatusListener listener = new DaemonStatusListener(ehillsStub, mySeatingList);
+        KuchoController listener = new KuchoController(ehillsStub, mySeatingList);
+        listener.dryRun = true;
         assertEquals(3, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "#さむい"));
         assertEquals(4, ehillsStub.level);
+        assertModuleNames(ehillsStub, "VAV17E-13", "VAV17E-14");
         listener.onStatus(new StatusSkelton("yusukey", "#さむい"));
         assertEquals(5, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "#さむい"));
@@ -42,28 +50,39 @@ public class DaemonListenerTest {
         assertEquals(1, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "#あつい"));
         assertEquals(1, ehillsStub.level);
+        listener.onStatus(new StatusSkelton("yusukey", "kiji #さむい"));
+        assertEquals(2, ehillsStub.level);
+        assertModuleNames(ehillsStub, "VAV17E-23", "VAV17E-24");
+    }
 
+    private void assertModuleNames(EHillsStub stub, String... modules) {
+        int matched = 0;
+        for (String module : modules) {
+            for (String area : stub.lastAreas) {
+                if (area.equals(module)) {
+                    matched++;
+                    break;
+                }
+            }
+        }
+        assertEquals(matched, modules.length);
     }
 
     class EHillsStub implements EHills {
         int level = 3;
+        List<String> lastAreas = null;
 
         @Override
-        public boolean warmer(String[] areas) {
-            if (level < 5) {
-                level++;
-                return true;
+        public boolean adjust(int value, List<String> areas) {
+            lastAreas = areas;
+            int oldLevel = level;
+            level += value;
+            if (level > 5) {
+                level = 5;
+            } else if (level < 1) {
+                level = 1;
             }
-            return false;
-        }
-
-        @Override
-        public boolean cooler(String[] areas) {
-            if (level > 1) {
-                level--;
-                return true;
-            }
-            return false;
+            return oldLevel != level;
         }
     }
 
@@ -71,8 +90,8 @@ public class DaemonListenerTest {
     SeatingList mySeatingList = new SeatingListStub();
 
     @Test
-    public void callCooler() {
-        System.out.println(DaemonStatusListener.class.getResourceAsStream("/atsui.jpg"));
+    public void callCooler() throws TwitterException {
+        TwitterFactory.getSingleton().updateStatus(new StatusUpdate(new Date().toString()).media("image", KuchoController.class.getResourceAsStream("/atsui.jpg")));
     }
 
 }

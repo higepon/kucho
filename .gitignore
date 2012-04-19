@@ -1,5 +1,5 @@
 config.yml
-kucho-daemon/src/main/resources/twitter4j.properties 
+kucho-daemon/src/main/resources/twitter4j.properties
 .DS_Store
 .idea/
 seating-list/target/*
