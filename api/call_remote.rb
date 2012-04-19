@@ -21,20 +21,19 @@ remote = AirRemote.new(config["url"])
 
 delta = ARGV.shift.to_i
 
-puts "ARGV=#{ARGV}"
-
 warmer = delta > 0
 
 ts = remote.fetch_temperatures(ARGV)
+pp ts
 if warmer
-  warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
-  if warmest[:temperature] == 5
+  coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
+  if coolest[:temperature] == 5
     puts "ng too hot" 
     exit
   end
 else
-  coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
-  if coolest[:temperature] == 1
+  warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
+  if warmest[:temperature] == 1
     puts "ng too cool" 
     exit
   end
