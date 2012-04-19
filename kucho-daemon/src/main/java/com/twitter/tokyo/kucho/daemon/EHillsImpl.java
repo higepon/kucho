@@ -49,7 +49,7 @@ public class EHillsImpl implements EHills {
             StringBuilder result = new StringBuilder();
             String line;
             while (null != (line = br.readLine())) {
-                result.append(line);
+                result.append(line).append('\n');
             }
             logger.info("response from the API:" + result);
             return result.toString().contains("ok");

@@ -1,5 +1,7 @@
 package com.twitter.tokyo.kucho.daemon;
 
+import java.util.Random;
+
 public class Message {
     static String[] messages = {
             "がんばってピ",
@@ -18,6 +20,13 @@ public class Message {
             "チキンラーメン🐔の季節だよね",
             "🐤ピヨ♪",
             "今日も仕事がんばるピヨ🐤",
+            "宇宙までひとっ飛びしたいなー🚀",
+            "イルカ🐬もクジラ🐳なんだよ。知ってた？",
+            "トサカ🐔にはコラーゲンがいっぱいだよ！",
+            "ポテト🍟がどうしても食べたい時ってあるよねー！",
+            "豚骨🐷ラーメン食べたいなー",
+            "ペペロンチーノ🍝はいかが？",
+            "今夜も一杯🍺いっとく？",
             "ほほほのほーい",
             "これで快適ピヨ",
             "焼き鳥食べたいぴよね",
@@ -40,6 +49,6 @@ public class Message {
     };
 
     public static String getMessage() {
-        return messages[(int) (System.currentTimeMillis() % messages.length)];
+        return messages[new Random(System.currentTimeMillis()).nextInt(messages.length)];
     }
 }
