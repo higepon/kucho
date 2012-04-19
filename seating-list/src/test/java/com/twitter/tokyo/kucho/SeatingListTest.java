@@ -26,7 +26,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 public class SeatingListTest {
-  private final String userName = "kentaro";
+  private final String userName = "imsuten";
 
   @Before
   public void setUp() {
