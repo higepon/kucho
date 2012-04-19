@@ -22,41 +22,10 @@ class AirRemote
     @last_error = ''
   end
 
-  def cooler!(names)
-    begin
-      ts = fetch_temperatures(names)
-      warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
-      if (warmest[:temperature] == 1)
-        @last_error = "too cool!"
-        return false
-      end
-      return set_temperature!([warmest[:dev_id]], warmest[:temperature] - 1)
-    rescue => exc
-      @last_error = exc.to_s
-      return false
-    end
-  end
-
-  def warmer!(names)
-    begin
-      ts = fetch_temperatures(names)
-      coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
-      if (coolest[:temperature] == 5) 
-        @last_error = "too warm!"
-        return false
-      end
-      return set_temperature!([coolest[:dev_id]], coolest[:temperature] + 1)
-    rescue => exc
-      @last_error = exc.to_s
-      return false
-    end
-  end
-
   def last_error
     return @last_error
   end
 
-private
   def fetch_temperatures(names)
     dev_ids = names.map {|name| name2dev_id(name) }
     return dev_ids.map{|dev_id| sleep 1; { :dev_id => dev_id, :temperature => temperature(dev_id) }}
@@ -87,11 +56,11 @@ private
     last_form = last_page.form_with(:name => 'Form1')
 
     # Go!
-    t = Thread.new do
-      last_form.submit(last_form.button_with(:name => 'btnAdjust'))
-    end
-    return t
+    last_form.submit(last_form.button_with(:name => 'btnAdjust'))
+    return true
   end
+
+private
 
   def temperature(dev_id)
     # Select air conditioner

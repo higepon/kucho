@@ -18,10 +18,57 @@ require 'api/air_remote'
 
 config = YAML.load_file("#{Dir::pwd}/config.yml")
 remote = AirRemote.new(config["url"])
-t = remote.cooler!(ARGV)
-if t
-  puts "ok"
-  t.join
+
+delta = ARGV.shift.to_i
+warmer = delta > 0
+
+ts = remote.fetch_temperatures(ARGV)
+if warmer
+  warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
+  if warmest[:temperature] == 5
+    puts "ng too hot" 
+    exit
+  end
 else
-  puts "ng: #{remote.last_error}"
+  coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
+  if coolest[:temperature] == 1
+    puts "ng too cool" 
+    exit
+  end
 end
+
+# return status immediately
+puts "ok"
+
+# pp ts
+
+delta.abs.times {|n|
+  if (warmer)
+    coolest = ts.min {|a, b| a[:temperature] <=> b[:temperature] }
+    if coolest[:temperature] != 5
+      coolest[:temperature] = coolest[:temperature] + 1
+      coolest[:dirty] = true
+    end
+  else 
+    warmest = ts.max {|a, b| a[:temperature] <=> b[:temperature] }
+    if warmest[:temperature] != 1
+      warmest[:temperature] = warmest[:temperature] - 1
+      warmest[:dirty] = true
+    end
+  end
+}
+
+# pp ts
+
+ts.each {|t|
+  if t[:dirty]
+    STDERR.puts "sleeping"
+    sleep 3
+    STDERR.puts "set #{t[:dev_id]} #{t[:temperature]}"
+    begin
+      remote.set_temperature!([t[:dev_id]], t[:temperature])
+    rescue => exc
+      STDERR.puts "#{exc.to_s}"
+    end
+  end
+}
