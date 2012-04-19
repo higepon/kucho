@@ -19,7 +19,6 @@ import com.twitter.tokyo.kucho.SeatingList;
 import twitter4j.*;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +44,7 @@ import java.util.List;
             return;
         }
 
-        String text = status.getText();
+        String text = status.getText().toLowerCase();
         // does the tweet contain room name?
         for (String roomName : seatingList.getRooms()) {
             if (text.contains(roomName)) {
