@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 class SeatingListStub extends SeatingList {
+    public SeatingListStub(){
+        super(null);
+    }
 
     public List<VentilationModule> getVentilationModules(String userName) {
         List<VentilationModule> modules = new ArrayList<VentilationModule>();

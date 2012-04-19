@@ -15,12 +15,10 @@
  */
 package com.twitter.tokyo.kucho.daemon;
 
-import twitter4j.internal.logging.Logger;
-
 import java.io.*;
 
 public class EHillsImpl implements EHills {
-    static final Logger logger = Logger.getLogger(EHillsImpl.class);
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EHillsImpl.class.getName());
     private static final EHills ehills = new EHillsImpl();
 
     private EHillsImpl() {
@@ -31,17 +29,19 @@ public class EHillsImpl implements EHills {
     }
 
     public boolean warmer(String[] areas) {
-        return callHigepon("../api/call_warmer.rb", areas);
+        return callHigepon("./api/call_warmer.rb", areas);
     }
 
     public boolean cooler(String[] areas) {
-        return callHigepon("../api/call_cooler.rb", areas);
+        return callHigepon("./api/call_cooler.rb", areas);
     }
 
     private boolean callHigepon(String command, String[] areas) {
         try {
+            logger.info(command +" " +join(areas, " "));
             ProcessBuilder pb = new ProcessBuilder("ruby", command, join(areas, " "));
             pb.redirectErrorStream(true);
+            pb.directory(new File("../"));
             Process p = pb.start();
             p.waitFor();
             InputStream is = p.getInputStream();
@@ -49,12 +49,12 @@ public class EHillsImpl implements EHills {
             BufferedReader br = new BufferedReader(isr);
             StringBuilder result = new StringBuilder();
             String line;
-            while(null != (line = br.readLine())){
+            while (null != (line = br.readLine())) {
                 result.append(line);
             }
             p.waitFor();
             logger.info("response from the API:" + result);
-            return "ok".equals(result);
+            return "ok".equals(result.toString().trim());
         } catch (IOException e) {
             logger.error("failed:", e);
             return false;

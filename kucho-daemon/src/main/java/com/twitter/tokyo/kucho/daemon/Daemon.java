@@ -19,10 +19,9 @@ import com.twitter.tokyo.kucho.SeatingList;
 import twitter4j.FilterQuery;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
-import twitter4j.internal.logging.Logger;
 
 public final class Daemon implements Constants {
-    static final Logger logger = Logger.getLogger(DaemonStatusListener.class);
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DaemonStatusListener.class);
 
     public static void main(String[] args) {
         TwitterStream stream = TwitterStreamFactory.getSingleton();

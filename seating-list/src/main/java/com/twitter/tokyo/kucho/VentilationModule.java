@@ -18,7 +18,7 @@ package com.twitter.tokyo.kucho;
 public class VentilationModule {
   private final String name;
 
-  VentilationModule(String name) {
+  public VentilationModule(String name) {
     this.name = name;
   }
 

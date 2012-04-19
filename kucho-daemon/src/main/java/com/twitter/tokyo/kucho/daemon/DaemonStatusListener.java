@@ -18,8 +18,8 @@ package com.twitter.tokyo.kucho.daemon;
 import com.twitter.tokyo.kucho.SeatingList;
 import com.twitter.tokyo.kucho.VentilationModule;
 import twitter4j.*;
-import twitter4j.internal.logging.Logger;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
@@ -32,26 +32,28 @@ import java.util.List;
         this.ehills = ehills;
         this.seatingList = seatingList;
     }
-
-    static final Logger logger = Logger.getLogger(DaemonStatusListener.class);
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DaemonStatusListener.class);
 
     @Override
     public void onStatus(Status status) {
         String screenName = status.getUser().getScreenName();
         String message = null;
-        InputStream profileImageResource = null;
+//        InputStream profileImageResource = null;
+        String profileImageResource = null;
         String[] modules = getModules(screenName);
         if (status.getText().contains(HOT)) {
             if (ehills.cooler(modules)) {
-                message = "@" + screenName + " 涼しくしたよ！";
-                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/atsui.jpg");
+                message = "@" + screenName + " 涼しくしたよ！ "+Message.getMessage();
+//                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/atsui.jpg");
+                profileImageResource = "src/main/resources/atsui.jpg";
             } else {
                 message = "@" + screenName + " もう無理！";
             }
         } else if (status.getText().contains(COLD)) {
             if (ehills.warmer(modules)) {
-                message = "@" + screenName + " 暖かくしたよ！";
-                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/samui.jpg");
+                message = "@" + screenName + " 暖かくしたよ！ "+Message.getMessage();
+//                profileImageResource = DaemonStatusListener.class.getResourceAsStream("/samui.jpg");
+                profileImageResource = "src/main/resources/samui.jpg";
             } else {
                 message = "@" + screenName + " もう無理！";
             }
@@ -59,7 +61,7 @@ import java.util.List;
         }
         if (message != null) {
             try {
-//                TwitterFactory.getSingleton().updateProfileImage(profileImageResource);
+//                TwitterFactory.getSingleton().updateProfileImage(new File(profileImageResource));
                 TwitterFactory.getSingleton().updateStatus(message + " " + new Date().toString());
             } catch (TwitterException e) {
                 logger.error("failed to update status", e);
@@ -69,7 +71,11 @@ import java.util.List;
 
     private String[] getModules(String screenName) {
         List<VentilationModule> ventilationModules = seatingList.getVentilationModules(screenName);
-        return new String[ventilationModules.size()];
+        String[] modules = new String[ventilationModules.size()];
+        for(int i=0;i<ventilationModules.size();i++){
+            modules[i]= ventilationModules.get(i).getName();
+        }
+        return modules;
     }
 
     @Override
