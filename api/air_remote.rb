@@ -89,7 +89,7 @@ private
   end
 
   def name2dev_id(name)
-    return "tcbox#{name[0..2]}0#{name[3..5]}I0#{name[7..8]}"
+    return "tcbox#{name[0..2]}0#{name[3..5]}#{name[0..2] == 'VAV' ? 'I' : 'P'}0#{name[7..8]}"
   end
 
 end
