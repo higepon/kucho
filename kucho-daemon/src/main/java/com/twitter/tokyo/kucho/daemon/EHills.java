@@ -15,7 +15,8 @@
  */
 package com.twitter.tokyo.kucho.daemon;
 
+import java.util.List;
+
 /*package*/ interface EHills {
-    boolean warmer(String[] areas);
-    boolean cooler(String[] areas);
+    boolean adjust(int value, List<String> areas);
 }

@@ -21,13 +21,12 @@ import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 
 public final class Daemon implements Constants {
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(DaemonStatusListener.class);
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(KuchoController.class);
 
     public static void main(String[] args) {
         TwitterStream stream = TwitterStreamFactory.getSingleton();
-//        SeatingList seatingList = new SeatingListStub();
-        SeatingList seatingList = new SeatingList(args[0]);
-        stream.addListener(new DaemonStatusListener(EHillsImpl.getInstance(), seatingList));
+        SeatingList seatingList = new SeatingList();
+        stream.addListener(new KuchoController(EHillsImpl.getInstance(), seatingList));
         FilterQuery query = new FilterQuery().track(new String[]{HOT, COLD});
         logger.info("Starting.");
         stream.filter(query);

@@ -7,7 +7,22 @@ import java.util.List;
 
 class SeatingListStub extends SeatingList {
     public SeatingListStub(){
-        super(null);
+    }
+
+    public List<String> getRooms() {
+        List<String> modules = new ArrayList<String>();
+        modules.add("kiji");
+        modules.add("きじ");
+        return modules;
+
+    }
+    public List<String> getVentilationModulesIn(String roomName) {
+        List<String> modules = new ArrayList<String>();
+        if ("kiji".equals(roomName) || "きじ".equals(roomName)) {
+            modules.add("VAV17E-23");
+            modules.add("VAV17E-24");
+        }
+        return modules;
     }
 
     public List<String> getVentilationModules(String userName) {

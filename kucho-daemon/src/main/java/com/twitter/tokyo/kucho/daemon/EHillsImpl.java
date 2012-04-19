@@ -16,6 +16,7 @@
 package com.twitter.tokyo.kucho.daemon;
 
 import java.io.*;
+import java.util.List;
 
 public class EHillsImpl implements EHills {
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EHillsImpl.class.getName());
@@ -28,20 +29,18 @@ public class EHillsImpl implements EHills {
         return ehills;
     }
 
-    public boolean warmer(String[] areas) {
-        return callHigepon("./api/call_warmer.rb", areas);
+    public boolean adjust(int value, List<String> areas) {
+        return callHigepon("./api/call_remote.rb", value,areas);
     }
 
-    public boolean cooler(String[] areas) {
-        return callHigepon("./api/call_cooler.rb", areas);
-    }
-
-    private boolean callHigepon(String command, String[] areas) {
+    private boolean callHigepon(String command, int value, List<String> areas) {
         try {
             logger.info(command +" " +join(areas, " "));
-            ProcessBuilder pb = new ProcessBuilder("ruby", command, join(areas, " "));
+            ProcessBuilder pb = new ProcessBuilder("ruby", command,String.valueOf(value),  join(areas, " "));
             pb.redirectErrorStream(true);
-            pb.directory(new File("../"));
+            if (new File(".").getAbsolutePath().contains("kucho-daemon")) {
+                pb.directory(new File("../"));
+            }
             Process p = pb.start();
             p.waitFor();
             InputStream is = p.getInputStream();
@@ -63,7 +62,7 @@ public class EHillsImpl implements EHills {
         }
     }
 
-    private static String join(String[] strs, String separator) {
+    private static String join(List<String> strs, String separator) {
         StringBuilder joined = new StringBuilder();
         boolean first = true;
         for (String str : strs) {
