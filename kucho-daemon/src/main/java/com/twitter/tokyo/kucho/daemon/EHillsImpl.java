@@ -16,6 +16,7 @@
 package com.twitter.tokyo.kucho.daemon;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EHillsImpl implements EHills {
@@ -35,9 +36,14 @@ public class EHillsImpl implements EHills {
 
     private boolean callHigepon(String command, int value, List<String> areas) {
         try {
-            logger.info(command + " " + String.valueOf(value) + " " + join(areas, " "));
-            ProcessBuilder pb = new ProcessBuilder("ruby", command,String.valueOf(value),  join(areas, " "));
-            pb.redirectErrorStream(true);
+          List<String> cmd = new ArrayList<String>();
+          cmd.add("ruby");
+          cmd.add(command);
+          cmd.add(String.valueOf(value));
+          cmd.addAll(areas);
+          logger.info("issuing this command with '$' replaced with ' ': " + join(cmd, "$"));
+          ProcessBuilder pb = new ProcessBuilder(cmd);
+          pb.redirectErrorStream(true);
             if (new File(".").getAbsolutePath().contains("kucho-daemon")) {
                 pb.directory(new File("../"));
             }
