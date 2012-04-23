@@ -30,7 +30,8 @@ public class KuchoControllerTest {
     @Test
     public void testWarmer() {
         EHillsStub ehillsStub = new EHillsStub();
-        KuchoController listener = new KuchoController(ehillsStub, mySeatingList);
+//        KuchoController listener = new KuchoController(ehillsStub, mySeatingList);
+        KuchoController listener = new KuchoController(ehillsStub, new SeatingList());
         listener.dryRun = true;
         assertEquals(3, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "#さむい"));
@@ -48,7 +49,11 @@ public class KuchoControllerTest {
         assertEquals(1, ehillsStub.level);
         listener.onStatus(new StatusSkelton("yusukey", "kiji #さむい"));
         assertEquals(3, ehillsStub.level);
-        assertModuleNames(ehillsStub, "VAV17E-23", "VAV17E-24");
+        System.out.println(ehillsStub);
+        assertModuleNames(ehillsStub, "VAV17E-05");
+        listener.onStatus(new StatusSkelton("marotan", "@kuchosan @ajishiosean TOKI　すごく　＃暑い"));
+        assertModuleNames(ehillsStub, "VAV17E-09", "VAV17E-10");
+        assertEquals(1, ehillsStub.level);
     }
 
     private void assertModuleNames(EHillsStub stub, String... modules) {
@@ -79,6 +84,14 @@ public class KuchoControllerTest {
                 level = 1;
             }
             return oldLevel != level;
+        }
+
+        @Override
+        public String toString() {
+            return "EHillsStub{" +
+                    "level=" + level +
+                    ", lastAreas=" + lastAreas +
+                    '}';
         }
     }
 

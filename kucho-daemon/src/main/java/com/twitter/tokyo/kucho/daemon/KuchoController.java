@@ -43,7 +43,7 @@ import java.util.List;
             return;
         }
 
-        String text = status.getText().toLowerCase();
+        String text = status.getText().toLowerCase().replaceAll("＃","#");
         // does the tweet contain room name?
         for (String roomName : seatingList.getRooms()) {
             if (text.contains(roomName)) {
