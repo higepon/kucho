@@ -46,6 +46,7 @@ public class Message {
             "そういえば焼き鳥と唐揚げってどちらがおいしいぴよ？",
             "have a nice kucho!",
             "I can fly!!!",
+            "バルス!",
     };
 
     public static String getMessage() {
