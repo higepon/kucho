@@ -67,9 +67,10 @@ import java.util.List;
 
         String message = null;
         String imagePath = null;
+        String powerfully = Math.abs(degree) == 4 ? "いっぱい" : "";
         if (degree < 0) {
             if (ehills.adjust(degree, modules)) {
-                message = "@" + screenName + " 涼しくしたよ！ " + Message.getMessage();
+                message = "@" + screenName + " " + powerfully + "涼しくしたよ！ " + Message.getMessage();
                 imagePath = "/atsui.jpg";
             } else {
                 message = "@" + screenName + " もう十分涼しいはずなんだけど・・";
@@ -77,7 +78,7 @@ import java.util.List;
             }
         } else {
             if (ehills.adjust(degree, modules)) {
-                message = "@" + screenName + " 暖かくしたよ！ " + Message.getMessage();
+                message = "@" + screenName + "  "+ powerfully + "暖かくしたよ！ " + Message.getMessage();
                 imagePath = "/samui.jpg";
             } else {
                 message = "@" + screenName + " もう十分あたたかいはずなんだけど・・";
