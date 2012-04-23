@@ -93,9 +93,11 @@ import java.util.List;
                 }
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
-                    TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message).media(imageFile));
+                    TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message).media(imageFile)
+                            .inReplyToStatusId(status.getId()));
                 } else {
-                    TwitterFactory.getSingleton().updateStatus(message);
+                    TwitterFactory.getSingleton().updateStatus(new StatusUpdate(message)
+                            .inReplyToStatusId(status.getId()));
                 }
             }
         } catch (TwitterException e) {
