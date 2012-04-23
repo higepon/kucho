@@ -1,3 +1,8 @@
+kucho-daemon/log.txt
+kucho-daemon/nohup.out
+kucho.build.log
+kucho.err
+kucho.out
 config.yml
 kucho-daemon/src/main/resources/twitter4j.properties
 .DS_Store
