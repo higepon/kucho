@@ -54,9 +54,9 @@ public class VentilationMapBuilder {
         String value = content.getString("$t");
 
         if (isAccountColumn(address)) {
-          accountMap.put(recordId, value);
+          accountMap.put(recordId, value.trim());
         } else if (isVentilationColumn(address)) {
-          ventMap.put(recordId, value);
+          ventMap.put(recordId, value.trim());
         }
       }
     } catch (JSONException e) {
