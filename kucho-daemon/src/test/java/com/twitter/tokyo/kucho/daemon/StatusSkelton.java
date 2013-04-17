@@ -117,7 +117,22 @@ class StatusSkelton implements Status {
             }
 
             @Override
-            public URL getProfileImageURL() {
+            public String getProfileImageURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getBiggerProfileImageURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getMiniProfileImageURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getOriginalProfileImageURL() {
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
@@ -127,7 +142,27 @@ class StatusSkelton implements Status {
             }
 
             @Override
-            public URL getURL() {
+            public String getProfileImageURLHttps() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getBiggerProfileImageURLHttps() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getMiniProfileImageURLHttps() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getOriginalProfileImageURLHttps() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getURL() {
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
@@ -212,7 +247,42 @@ class StatusSkelton implements Status {
             }
 
             @Override
+            public String getProfileBackgroundImageURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
             public String getProfileBackgroundImageUrlHttps() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getProfileBannerURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getProfileBannerRetinaURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getProfileBannerIPadURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getProfileBannerIPadRetinaURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getProfileBannerMobileURL() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public String getProfileBannerMobileRetinaURL() {
                 return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
@@ -254,6 +324,16 @@ class StatusSkelton implements Status {
             @Override
             public boolean isFollowRequestSent() {
                 return false;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public URLEntity[] getDescriptionURLEntities() {
+                return new URLEntity[0];  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public URLEntity getURLEntity() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
             }
 
             @Override
@@ -299,9 +379,15 @@ class StatusSkelton implements Status {
     }
 
     @Override
-    public Annotations getAnnotations() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public long getCurrentUserRetweetId() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    @Override
+    public boolean isPossiblySensitive() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
 
     @Override
     public int compareTo(Status status) {
